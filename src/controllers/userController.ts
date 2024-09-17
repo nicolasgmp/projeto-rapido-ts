@@ -1,5 +1,5 @@
 import { User } from "../models/user";
-import { IUserService } from "../services/interfaces/IUserService";
+import { IUserService } from "../services/interfaces/iUserService";
 import { HttpResponse, IUserController } from "./interfaces/iUserController";
 
 export class UserController implements IUserController {

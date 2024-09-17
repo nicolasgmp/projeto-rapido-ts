@@ -1,6 +1,6 @@
 import { User } from "../models/user";
 import { IUserRepository } from "../repositories/interfaces/iUserRepository";
-import { IUserService } from "./interfaces/IUserService";
+import { IUserService } from "./interfaces/iUserService";
 
 export class UserService implements IUserService {
   constructor(private readonly userRepository: IUserRepository) {}
