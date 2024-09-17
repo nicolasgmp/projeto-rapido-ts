@@ -1,5 +1,6 @@
+import { ObjectId } from "mongodb";
 import { MongoClientDB } from "../db/mongo";
-import { CreateUserParams, User } from "../models/user";
+import { CreateUserParams, UpdateUserParams, User } from "../models/user";
 import { IUserRepository } from "./interfaces/iUserRepository";
 
 export class MongoUserRepository implements IUserRepository {
@@ -15,6 +16,26 @@ export class MongoUserRepository implements IUserRepository {
 
     if (!user) {
       throw new Error("User not created");
+    }
+
+    const { _id, ...rest } = user;
+
+    return { id: _id.toHexString(), ...rest };
+  }
+
+  async updateUser(id: string, params: UpdateUserParams): Promise<User> {
+    const { modifiedCount } = await MongoClientDB.db
+      .collection("users")
+      .updateOne({ _id: new ObjectId(id) }, { $set: { ...params } });
+
+    if (modifiedCount === 0) {
+      throw new Error("User not updated");
+    }
+
+    const user = await MongoClientDB.db.collection<Omit<User, "id">>("users").findOne({ _id: new ObjectId(id) });
+
+    if (!user) {
+      throw new Error("User not found after updated");
     }
 
     const { _id, ...rest } = user;
